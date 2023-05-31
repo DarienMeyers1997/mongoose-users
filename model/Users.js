@@ -2,24 +2,25 @@ const mongoose = require("mongoose");
 const { v4: uuid } = require("uuid");
 
 const userSchema = new mongoose.Schema({
-  _id: { type: mongoose.Schema.Types.UUID, default: () => uuid() },
-  name: String,
+  _id: { type: String, default: () => uuid() },
+  name: { type: String, required: true },
   email: {
     type: String,
-    require: true,
+    required: true,
     maxlength: 320,
     trim: true,
     lowercase: true,
+    unique: true,
   },
-  passowrd: {
+  password: {
     type: String,
-    require: true,
+    required: true,
     maxLength: 30,
   },
   phone: {
     type: Number,
-    minLength: 10,
-    maxLength: 10,
+    min: 1000000000,
+    max: 9999999999,
   },
   createdAt: { type: Date, default: Date.now },
 });
@@ -27,4 +28,4 @@ const userSchema = new mongoose.Schema({
 //           mongoose.model(Collection Name)
 const User = mongoose.model("user1", userSchema);
 
-module.export = User;
+module.exports = User;
