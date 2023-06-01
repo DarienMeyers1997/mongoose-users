@@ -31,10 +31,20 @@ router.get("/single-user/:email", async (req, res) => {
   }
 });
 
-router.get("/all-user-name/:name", async (req, res) => {
+router.get("/all-user-name/", async (req, res) => {
   try {
+    /*
+    makes the search more dynamic
+    const users = await User.find({ name: { $regex: new RegExp(name, "i")}})
+
+    */
     const name = req.params.name;
     const user = await User.find({ name: name });
+    res.status(200).json({ success: true, data: user });
+    if (!user)
+      return res
+        .status(400)
+        .json({ success: false, message: "no users with that name" });
     res.status(200).json({ success: true, data: user });
   } catch (error) {
     console.log(error);
@@ -54,6 +64,33 @@ router.post("/new-user", async (req, res) => {
     const newUser = await new User(user);
     const saveUser = await newUser.save();
     res.status(200).json({ success: true, data: saveUser });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+router.put("/update-user/:id", async (req, res) => {
+  try {
+    const updateUser = await User.findOneAndUpdate(
+      { _id: req.params.id },
+      req.body
+    );
+    if (!updateUser)
+      return res
+        .status(400)
+        .json({ success: false, message: "user not found" });
+    res.status(200).json({ success: true, data: updateUser });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+router.delete("/delete-user/:id", async (req, res) => {
+  try {
+    const deleteUser = await User.findByIdAndDelete({ _id: req.params.id });
+    if (!deleteUser)
+      return res.status(400).json({ success: false, data: deleteUser });
+    res.status(200).json({ success: true, data: deleteUser });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
