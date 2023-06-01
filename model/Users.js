@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema({
     min: 1000000000,
     max: 9999999999,
   },
+
   createdAt: { type: Date, default: Date.now },
 });
 

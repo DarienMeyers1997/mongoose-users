@@ -11,11 +11,15 @@ const { v4: uuid } = require("uuid");
 
 */
 
-const toDoSchema = mongoose.Schema({
+const toDoSchema = new mongoose.Schema({
+  _id: { type: String, default: () => uuid() },
   title: { type: String, required: true },
   description: { type: String, required: true },
-  priority: { type: String, enum: ["LOW", "MEDIUM", "HIGH"] },
-  default: "MEDIUM",
+  priority: {
+    type: String,
+    enum: ["low", "medium", "high"],
+    default: "medium",
+  },
   completed: { type: Boolean, default: false },
   completedAt: { type: Date, default: Date.now },
 });
